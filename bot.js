@@ -10,7 +10,7 @@ for (let dep of Object.keys(packageJson.dependencies)) {
     }
 }
 
-const { Client } = require("discord.js-selfbot-v13");
+const { Client, Options } = require("discord.js-selfbot-v13");
 const axios = require("axios");
 const fs = require("fs");
 const chalk = require("chalk");
@@ -34,14 +34,31 @@ const nitroRegex =
 (async () => {
     for (let i = 0; i < tokens.length; i++) {
         const xToken = tokens[i].trim();
-        const xClient = new Client({});
+        const xClient = new Client({
+            makeCache: Options.cacheWithLimits({
+                MessageManager: 10,
+                PresenceManager: 0,
+                ReactionManager: 0,
+            }),
+            sweepers: {
+                ...Options.DefaultSweeperSettings,
+                messages: { interval: 300, lifetime: 600 },
+                users: {
+                    interval: 3_600,
+                    filter: () => (user) =>
+                        user.bot && user.id !== user.client.user.id,
+                },
+            },
+        });
 
         xClient.once("ready", () => {
             xClient.user.setStatus("offline");
             loggedInTokens++;
 
             console.log(
-                chalk.blue(chalk.bold(`${loggedInTokens} - Bot`)),
+                chalk.blue(
+                    chalk.bold(`${loggedInTokens} / ${tokens.length} - Bot`)
+                ),
                 chalk.white(`>>`),
                 chalk.red(`${xClient.user.username}`),
                 chalk.green(`is ready!`),
@@ -64,7 +81,9 @@ const nitroRegex =
 
                 redeemedCodes.add(nitroCode);
 
-                console.log(`Bulunan Nitro Kodu: ${nitroCode}`);
+                console.log(
+                    `${xClient.user.username} - Found Nitro Code: ${nitroCode}`
+                );
 
                 try {
                     const response = await axios.post(
@@ -78,33 +97,39 @@ const nitroRegex =
                     );
 
                     if (response.status === 200) {
-                        console.log("Nitro code successfully redeemed!");
+                        console.log(
+                            `${xClient.user.username} - Nitro code successfully redeemed!`
+                        );
                     } else {
-                        console.log("Nitro code could not be used.");
+                        console.log(
+                            `${xClient.user.username} - Nitro code could not be used.`
+                        );
                     }
                 } catch (error) {
                     if (error.response && error.response.status === 429) {
                         const retryAfter =
                             error.response.data.retry_after * 1000;
                         console.log(
-                            `Rate limit exceeded. Waiting for ${retryAfter} ms...`
+                            `${xClient.user.username} - Rate limit exceeded. Waiting for ${retryAfter} ms...`
                         );
                         await delay(retryAfter);
                     } else if (
                         error.response &&
                         error.response.data.code === 10038
                     ) {
-                        console.log(`The Unknown Nitro Code: ${nitroCode}`);
+                        console.log(
+                            `${xClient.user.username} - The Unknown Nitro Code: ${nitroCode}`
+                        );
                     } else if (
                         error.response &&
                         error.response.data.code === 50050
                     ) {
                         console.log(
-                            `This Nitro code has already been used: ${nitroCode}`
+                            `${xClient.user.username} - This Nitro code has already been used: ${nitroCode}`
                         );
                     } else {
                         console.error(
-                            "An error has occurred:",
+                            `${xClient.user.username} - An error has occurred:`,
                             error.response ? error.response.data : error.message
                         );
                     }
