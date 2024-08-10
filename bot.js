@@ -14,7 +14,7 @@ const { Client } = require("discord.js-selfbot-v13");
 const axios = require("axios");
 const fs = require("fs");
 const chalk = require("chalk");
-const config = require("config.json");
+const config = require("./config.json");
 
 const redeemToken = config.maintoken;
 const tokens = fs
