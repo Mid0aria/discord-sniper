@@ -9,7 +9,9 @@
     "description": "Snipes nitro gift codes from an alt account(s) to your main account.",
     "main": "bot.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "run": "node bot.js",
+        "deldup": "node deletedup.js"
     },
     "repository": {
         "type": "git",

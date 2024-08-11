@@ -16,6 +16,8 @@ const fs = require("fs");
 const chalk = require("chalk");
 const config = require("./config.json");
 
+cp.execSync("node deletedup.js");
+
 const redeemToken = config.maintoken;
 const tokens = fs
     .readFileSync("alttokens.txt", "utf8")
@@ -42,9 +44,9 @@ const nitroRegex =
             }),
             sweepers: {
                 ...Options.DefaultSweeperSettings,
-                messages: { interval: 300, lifetime: 600 },
+                messages: { interval: 300, lifetime: 10 },
                 users: {
-                    interval: 3_600,
+                    interval: 200,
                     filter: () => (user) =>
                         user.bot && user.id !== user.client.user.id,
                 },
@@ -81,9 +83,9 @@ const nitroRegex =
 
                 redeemedCodes.add(nitroCode);
 
-                console.log(
-                    `${xClient.user.username} - Found Nitro Code: ${nitroCode}`
-                );
+                // console.log(
+                //     `${xClient.user.username} - Found Nitro Code: ${nitroCode}`
+                // );
 
                 try {
                     const response = await axios.post(
@@ -98,11 +100,17 @@ const nitroRegex =
 
                     if (response.status === 200) {
                         console.log(
-                            `${xClient.user.username} - Nitro code successfully redeemed!`
+                            `${chalk.magenta(
+                                xClient.user.username
+                            )} - ${chalk.green(
+                                "Nitro code successfully redeemed!"
+                            )}`
                         );
                     } else {
                         console.log(
-                            `${xClient.user.username} - Nitro code could not be used.`
+                            `${chalk.magenta(
+                                xClient.user.username
+                            )} - ${chalk.red("Nitro code could not be used.")}`
                         );
                     }
                 } catch (error) {
@@ -110,7 +118,9 @@ const nitroRegex =
                         const retryAfter =
                             error.response.data.retry_after * 1000;
                         console.log(
-                            `${xClient.user.username} - Rate limit exceeded. Waiting for ${retryAfter} ms...`
+                            `${chalk.magenta(
+                                xClient.user.username
+                            )} - Rate limit exceeded. Waiting for ${retryAfter} ms...`
                         );
                         await delay(retryAfter);
                     } else if (
@@ -118,18 +128,28 @@ const nitroRegex =
                         error.response.data.code === 10038
                     ) {
                         console.log(
-                            `${xClient.user.username} - The Unknown Nitro Code: ${nitroCode}`
+                            `${chalk.magenta(
+                                xClient.user.username
+                            )} - ${chalk.blue(
+                                "The Unknown Nitro Code"
+                            )}: ${nitroCode}`
                         );
                     } else if (
                         error.response &&
                         error.response.data.code === 50050
                     ) {
                         console.log(
-                            `${xClient.user.username} - This Nitro code has already been used: ${nitroCode}`
+                            `${chalk.magenta(
+                                xClient.user.username
+                            )} - ${chalk.yellow(
+                                "This Nitro code has already been used"
+                            )}: ${nitroCode}`
                         );
                     } else {
                         console.error(
-                            `${xClient.user.username} - An error has occurred:`,
+                            `${chalk.magenta(
+                                xClient.user.username
+                            )} - An error has occurred:`,
                             error.response ? error.response.data : error.message
                         );
                     }
