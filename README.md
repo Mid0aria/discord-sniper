@@ -41,6 +41,7 @@ dWdnY2Y6Ly9iY3JhLmZjYmd2c2wucGJ6L2dlbnB4LzVwc2tIZ1B4Y3hQVkVlWGxxVVhGb1kgcm90MTM=
 
 -   Support Multi Alt Token
 -   Auto Claim Nitro
+-   Auto Delete Duplicated Tokens
 
 ## ⚙・config.json example
 
