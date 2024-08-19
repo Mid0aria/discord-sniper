@@ -40,9 +40,9 @@ sleep 1
 # sleep 1
 # unset PREFIX && nvm use node
 echo "${GREEN} [+] ${BLUE} Installed Packages ${RESTORE}"
-echo "${GREEN} [+] ${BLUE} Installing Discord Nitro Sniper ${RESTORE}"
-git clone https://github.com/Mid0aria/nitro-sniper/
-cd nitro-sniper
+echo "${GREEN} [+] ${BLUE} Installing Discord Sniper ${RESTORE}"
+git clone https://github.com/Mid0aria/discord-sniper/
+cd discord-sniper
 echo "${GREEN} [+] ${BLUE} Installing nodejs packages${RESTORE}"
 npm i --no-bin-links #using --no-bin-links to not get any errors regarding symbolic links
 echo "${GREEN} [=] Installed Successfully , Please edit config.json"
