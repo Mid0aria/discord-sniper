@@ -3,8 +3,8 @@ dWdnY2Y6Ly9iY3JhLmZjYmd2c2wucGJ6L2dlbnB4LzVwc2tIZ1B4Y3hQVkVlWGxxVVhGb1kgcm90MTM=
 <h1 align="center">Discord Nitro Sniper</h1>
 <p align="center">
 
-[![Total Views](https://hits.sh/github.com/Mid0aria/nitro-sniper.svg?view=today-total&label=Repo%20Today/Total%20Views&color=770ca1&labelColor=007ec6)](https://github.com/Mid0aria/nitro-sniper)
-[![Last Commit](https://img.shields.io/github/last-commit/mid0aria/nitro-sniper)](https://github.com/Mid0aria/nitro-sniper)
+[![Total Views](https://hits.sh/github.com/Mid0aria/discord-sniper.svg?view=today-total&label=Repo%20Today/Total%20Views&color=770ca1&labelColor=007ec6)](https://github.com/Mid0aria/discord-sniper)
+[![Last Commit](https://img.shields.io/github/last-commit/mid0aria/discord-sniper)](https://github.com/Mid0aria/discord-sniper)
 
 ## Tutorials
 
@@ -28,10 +28,10 @@ dWdnY2Y6Ly9iY3JhLmZjYmd2c2wucGJ6L2dlbnB4LzVwc2tIZ1B4Y3hQVkVlWGxxVVhGb1kgcm90MTM=
 
 ## ⭐・Star History
 
-<h2 align="center">Goal: <a href="https://github.com/Mid0aria/nitro-sniper/stargazers"><img src="https://img.shields.io/github/stars/Mid0aria/nitro-sniper" /></a> / 512</h2>
+<h2 align="center">Goal: <a href="https://github.com/Mid0aria/discord-sniper/stargazers"><img src="https://img.shields.io/github/stars/Mid0aria/discord-sniper" /></a> / 512</h2>
 ⭐⭐⭐ You can also give this repository a star so that others know we're trusted!<br>
 
-[![Star History Chart](https://api.star-history.com/svg?repos=Mid0aria/nitro-sniper&type=Date)](https://star-history.com/#Mid0aria/nitro-sniper&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=Mid0aria/discord-sniper&type=Date)](https://star-history.com/#Mid0aria/discord-sniper&Date)
 
 ## ❗・Important (Anyone using the bot is deemed to have read and accepted these)
 
@@ -40,17 +40,24 @@ dWdnY2Y6Ly9iY3JhLmZjYmd2c2wucGJ6L2dlbnB4LzVwc2tIZ1B4Y3hQVkVlWGxxVVhGb1kgcm90MTM=
 ## 👑・Features
 
 -   Support Multi Alt Token
--   Auto Claim Nitro
+-   Auto Claim All Discord Gift Codes (Nitro, Game, Decoration)
+-   Auto Snipe Tokens
 -   Auto Delete Duplicated Tokens
+-   Minimized Ram Cache System
 
 ## ⚙・config.json example
 
 ```
 {
-    "maintoken": "" // Main Account Token
+    "maintoken": "", / Enter the token of the account to which the codes will be redeem here
+    "settings": {
+        "deleteduplicatetokens": true, / set this to true if you want to delete duplicate tokens
+        "sniper": {
+            "code": true, / set to true if you want to snipe nitro, game, decoration codes and redeem them to your account
+            "token": false / set this to true if you want to snipe tokens
+        }
+    }
 }
-
-
 ```
 
 ## 💎・Get Token
@@ -94,7 +101,7 @@ m)
 
 [NodeJS](https://nodejs.org/en/)<br>
 [Terminal](https://apps.microsoft.com/detail/9n0dx20hk701)<br>
-[Nitro Sniper ZIP File](https://github.com/Mid0aria/nitro-sniper/archive/refs/heads/main.zip)
+[Nitro Sniper ZIP File](https://github.com/Mid0aria/discord-sniper/archive/refs/heads/main.zip)
 
 ## 🎈・Installation
 
@@ -105,11 +112,11 @@ m)
 node -v
 
 # Clone the files with git:
-git clone https://github.com/Mid0aria/nitro-sniper
-# Optionally you can also download from github at https://github.com/Mid0aria/nitro-sniper/archive/refs/heads/main.zip
+git clone https://github.com/Mid0aria/discord-sniper
+# Optionally you can also download from github at https://github.com/Mid0aria/discord-sniper/archive/refs/heads/main.zip
 
 # Enter into the cloned directory:
-cd nitro-sniper
+cd discord-sniper
 
 # Configure the bot:
 notepad config.json # On windows
@@ -132,12 +139,12 @@ node bot.js
 # Install:
 
 apt update -y && apt upgrade -y && pkg install wget
-wget https://raw.githubusercontent.com/mid0aria/nitro-sniper/main/termux-setup.sh
+wget https://raw.githubusercontent.com/mid0aria/discord-sniper/main/termux-setup.sh
 sh termux-setup.sh
 
 # Configure the bot:
 
-cd nitro-sniper
+cd discord-sniper
 nano config.json
 nano alttokens.txt # (Put your alt tokens in alttokens.txt)
 

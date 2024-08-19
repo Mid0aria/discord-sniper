@@ -10,28 +10,56 @@ for (let dep of Object.keys(packageJson.dependencies)) {
     }
 }
 
+process.stdout.write("\x1Bc");
+require("./utils/anticrash.js");
+
 const { Client, Options } = require("discord.js-selfbot-v13");
 const axios = require("axios");
 const fs = require("fs");
 const chalk = require("chalk");
 const config = require("./config.json");
+const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-cp.execSync("node deletedup.js");
+if (config.settings.deleteduplicatetokens) {
+    cp.execSync("node deletedup.js");
+}
 
-const redeemToken = config.maintoken;
 const tokens = fs
     .readFileSync("alttokens.txt", "utf8")
     .split("\n")
     .filter(Boolean);
 
-let totalGuilds = 0;
-let loggedInTokens = 0;
-let redeemedCodes = new Set();
+let snipedcodes = new Set();
+let snipedtokens = new Set();
 
-const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
-const nitroRegex =
+if (fs.existsSync("snipedtokens.txt")) {
+    const loadedTokens = fs
+        .readFileSync("snipedtokens.txt", "utf8")
+        .split("\n")
+        .filter(Boolean);
+    snipedtokens = new Set(loadedTokens);
+}
+const codeRegex =
     /(discord\.gift\/|discord\.com\/gifts\/|discordapp\.com\/gifts\/)[^\s]+/gim;
+
+const tokenRegex =
+    /([a-zA-Z0-9_\-]{24,28})\.([a-zA-Z0-9_\-]{6})\.([a-zA-Z0-9_\-]{27,})/g;
+
+let global = {
+    loggedInTokens: 0,
+    totalGuilds: 0,
+    totalChannels: 0,
+    tokens: tokens,
+    redeemToken: config.maintoken,
+    sets: {
+        snipedcodes: snipedcodes,
+        snipedtokens: snipedtokens,
+    },
+    regexs: {
+        code: codeRegex,
+        token: tokenRegex,
+    },
+};
 
 (async () => {
     for (let i = 0; i < tokens.length; i++) {
@@ -52,146 +80,55 @@ const nitroRegex =
                 },
             },
         });
-
-        xClient.once("ready", () => {
-            xClient.user.setStatus("offline");
-            loggedInTokens++;
-
-            console.log(
-                chalk.blue(
-                    chalk.bold(`${loggedInTokens} / ${tokens.length} - Bot`)
-                ),
-                chalk.white(`>>`),
-                chalk.red(`${xClient.user.username}`),
-                chalk.green(`is ready!`),
-                chalk.white(`>>`),
-                chalk.yellow(`${xClient.guilds.cache.size}`),
-                chalk.green(`guild is listening!!!`)
-            );
-
-            totalGuilds += xClient.guilds.cache.size;
-        });
-
-        xClient.on("messageCreate", async (message) => {
-            const nitroMatch = message.content.match(nitroRegex);
-            if (nitroMatch) {
-                const nitroCode = nitroMatch[0].split("/").pop();
-
-                if (redeemedCodes.has(nitroCode)) {
-                    return;
-                }
-
-                redeemedCodes.add(nitroCode);
-
-                // console.log(
-                //     `${xClient.user.username} - Found Nitro Code: ${nitroCode}`
-                // );
-
-                try {
-                    const response = await axios.post(
-                        `https://discord.com/api/v9/entitlements/gift-codes/${nitroCode}/redeem`,
-                        {},
-                        {
-                            headers: {
-                                Authorization: `${redeemToken}`,
-                            },
-                        }
-                    );
-
-                    if (response.status === 200) {
-                        console.log(
-                            `${chalk.magenta(
-                                xClient.user.username
-                            )} - ${chalk.green(
-                                "Nitro code successfully redeemed!"
-                            )}`
-                        );
-                    } else {
-                        console.log(
-                            `${chalk.magenta(
-                                xClient.user.username
-                            )} - ${chalk.red("Nitro code could not be used.")}`
-                        );
-                    }
-                } catch (error) {
-                    if (error.response && error.response.status === 429) {
-                        const retryAfter =
-                            error.response.data.retry_after * 1000;
-                        console.log(
-                            `${chalk.magenta(
-                                xClient.user.username
-                            )} - Rate limit exceeded. Waiting for ${retryAfter} ms...`
-                        );
-                        await delay(retryAfter);
-                    } else if (
-                        error.response &&
-                        error.response.data.code === 10038
-                    ) {
-                        console.log(
-                            `${chalk.magenta(
-                                xClient.user.username
-                            )} - ${chalk.blue(
-                                "The Unknown Nitro Code"
-                            )}: ${nitroCode}`
-                        );
-                    } else if (
-                        error.response &&
-                        error.response.data.code === 50050
-                    ) {
-                        console.log(
-                            `${chalk.magenta(
-                                xClient.user.username
-                            )} - ${chalk.yellow(
-                                "This Nitro code has already been used"
-                            )}: ${nitroCode}`
-                        );
-                    } else {
-                        console.error(
-                            `${chalk.magenta(
-                                xClient.user.username
-                            )} - An error has occurred:`,
-                            error.response ? error.response.data : error.message
-                        );
-                    }
-                }
-            }
-        });
+        require("./utils/ready.js")(xClient, chalk, global);
+        if (config.settings.sniper.code) {
+            require("./utils/code.js")(xClient, chalk, global);
+        }
+        if (config.settings.sniper.token) {
+            require("./utils/token.js")(xClient, chalk, fs, global);
+        }
 
         await xClient.login(xToken);
         await delay(1000);
     }
+    process.stdout.write("\x1Bc");
+    console.log(chalk.green.bold("Settings:"));
 
+    function boolToStatus(value) {
+        if (typeof value === "boolean") {
+            return value ? "active" : "inactive";
+        } else if (typeof value === "string") {
+            return value.toLowerCase() === "true" ? "active" : "inactive";
+        }
+        return "unknown";
+    }
+
+    for (const [key, value] of Object.entries(config.settings)) {
+        if (typeof value === "object") {
+            console.log(chalk.green.bold(`${key.toUpperCase()} Settings:`));
+            for (const [subKey, subValue] of Object.entries(value)) {
+                console.log(
+                    chalk.cyan(
+                        `${subKey.charAt(0).toUpperCase() + subKey.slice(1)}:`
+                    ),
+                    chalk.yellow(boolToStatus(subValue))
+                );
+            }
+        } else {
+            console.log(
+                chalk.cyan(`${key.charAt(0).toUpperCase() + key.slice(1)}:`),
+                chalk.yellow(boolToStatus(value))
+            );
+        }
+    }
     console.log(
         chalk.green.bold(
-            `A total of ${loggedInTokens} tokens have successfully logged in.`
+            `A total of ${global.loggedInTokens} tokens have successfully logged in.`
         )
     );
     console.log(
-        chalk.green.bold(`Total ${totalGuilds} servers are listening.`)
+        chalk.green.bold(
+            `Total ${global.totalGuilds} guilds and ${global.totalChannels} channels are listening.`
+        )
     );
 })();
-
-process.on("unhandledRejection", (reason, p) => {
-    console.log(
-        chalk.blue(chalk.bold(`[antiCrash]`)),
-        chalk.white(`>>`),
-        chalk.magenta(`Unhandled Rejection/Catch`),
-        chalk.red(reason, p)
-    );
-});
-process.on("uncaughtException", (err, origin) => {
-    console.log(
-        chalk.blue(chalk.bold(`[antiCrash]`)),
-        chalk.white(`>>`),
-        chalk.magenta(`Unhandled Exception/Catch`),
-        chalk.red(err, origin)
-    );
-});
-process.on("uncaughtExceptionMonitor", (err, origin) => {
-    console.log(
-        chalk.blue(chalk.bold(`[antiCrash]`)),
-        chalk.white(`>>`),
-        chalk.magenta(`Uncaught Exception/Catch`),
-        chalk.red(err, origin)
-    );
-});

@@ -1,3 +1,10 @@
 {
-    "maintoken": ""
+    "maintoken": "",
+    "settings": {
+        "deleteduplicatetokens": false,
+        "sniper": {
+            "code": false,
+            "token": false
+        }
+    }
 }
