@@ -1,10 +1,23 @@
 {
     "maintoken": "",
     "settings": {
-        "deleteduplicatetokens": false,
+        "deleteduplicatetokens": true,
         "sniper": {
-            "code": false,
-            "token": false
+            "code": true,
+            "token": true,
+            "giveaway": true,
+            "messagelog": false
         }
+    },
+    "logs": {
+        "code": true,
+        "token": true
+    },
+    "messagelog": {
+        "guilds": [],
+        "channels": []
+    },
+    "webhooks": {
+        "giveaway": ""
     }
 }

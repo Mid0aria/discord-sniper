@@ -1,4 +1,5 @@
 const axios = require("axios");
+
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
 async function getSkuName(code) {
@@ -22,10 +23,38 @@ async function getSkuName(code) {
     }
 }
 
-module.exports = (client, chalk, global) => {
+function sanitizeName(name) {
+    return name.replace(/[^a-z0-9]/gi, "_").toLowerCase();
+}
+
+module.exports = (client, chalk, fs, path, global) => {
     client.on("messageCreate", async (message) => {
         const codeMatch = message.content.match(global.regexs.code);
         if (codeMatch) {
+            if (global.config.logs.code) {
+                const logfolderPath = path.join(
+                    __dirname,
+                    "../logs",
+                    "codelogs",
+                    sanitizeName(client.user.username),
+                    sanitizeName(message.guild.name)
+                );
+
+                const logFilePath = path.join(logfolderPath, "code_logs.txt");
+
+                if (!fs.existsSync(logfolderPath)) {
+                    fs.mkdirSync(logfolderPath, { recursive: true });
+                }
+
+                const logEntry = `╔═════════════════════════════════ Discord Sniper ══════════════════════════════════╗\nGuild Name: ${message.guild.name}\nMessage Channel ID: ${message.channel.id}\nMessage Link: ${message.url}\nMessage Author: ${message.author.tag}\nMessage: ${message.content}\n╚═════════════════════════════════ Discord Sniper ══════════════════════════════════╝\n`;
+
+                fs.appendFile(logFilePath, logEntry, (err) => {
+                    if (err) {
+                        console.error("Error saving log:", err);
+                    }
+                });
+            }
+
             const code = codeMatch[0].split("/").pop();
 
             if (global.sets.snipedcodes.has(code)) {
@@ -40,7 +69,7 @@ module.exports = (client, chalk, global) => {
                     {},
                     {
                         headers: {
-                            Authorization: `${global.redeemToken}`,
+                            Authorization: `${global.config.maintoken}`,
                         },
                     }
                 );
@@ -102,6 +131,18 @@ module.exports = (client, chalk, global) => {
                             client.user.username
                         )}] - ${chalk.yellow(
                             "You already have the content(SKU) of this code."
+                        )} - ${code} - ${chalk.cyan(`Product: ${skuName}`)}`
+                    );
+                } else if (
+                    error.response &&
+                    error.response.data.code === 50070
+                ) {
+                    const skuName = await getSkuName(code);
+                    console.log(
+                        `[${chalk.magenta(
+                            client.user.username
+                        )}] - ${chalk.yellow(
+                            "Payment source required to redeem gift."
                         )} - ${code} - ${chalk.cyan(`Product: ${skuName}`)}`
                     );
                 } else {

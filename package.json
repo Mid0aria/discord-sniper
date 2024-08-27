@@ -5,7 +5,7 @@
         "discord.js-selfbot-v13": "^3.3.0"
     },
     "name": "discord-sniper",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "description": "Multifunctional discord sniper",
     "main": "bot.js",
     "scripts": {
@@ -15,18 +15,23 @@
     },
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/Mid0aria/nitro-sniper.git"
+        "url": "git+https://github.com/Mid0aria/discord-sniper.git"
     },
     "keywords": [
         "nitro",
         "sniper",
         "discord",
-        "selfbot"
+        "selfbot",
+        "token",
+        "giveaway",
+        "messagelog",
+        "discordmessagelog",
+        "autojoingiveaways"
     ],
     "author": "Mid0aria",
     "license": "MIT",
     "bugs": {
-        "url": "https://github.com/Mid0aria/nitro-sniper/issues"
+        "url": "https://github.com/Mid0aria/discord-sniper/issues"
     },
-    "homepage": "https://github.com/Mid0aria/nitro-sniper#readme"
+    "homepage": "https://github.com/Mid0aria/discord-sniper#readme"
 }

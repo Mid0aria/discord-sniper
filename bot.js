@@ -11,11 +11,11 @@ for (let dep of Object.keys(packageJson.dependencies)) {
 }
 
 process.stdout.write("\x1Bc");
-require("./utils/anticrash.js");
 
 const { Client, Options } = require("discord.js-selfbot-v13");
 const axios = require("axios");
 const fs = require("fs");
+const path = require("path");
 const chalk = require("chalk");
 const config = require("./config.json");
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -50,7 +50,7 @@ let global = {
     totalGuilds: 0,
     totalChannels: 0,
     tokens: tokens,
-    redeemToken: config.maintoken,
+    config: config,
     sets: {
         snipedcodes: snipedcodes,
         snipedtokens: snipedtokens,
@@ -81,12 +81,28 @@ let global = {
             },
         });
         require("./utils/ready.js")(xClient, chalk, global);
+
         if (config.settings.sniper.code) {
-            require("./utils/code.js")(xClient, chalk, global);
+            require("./utils/code.js")(xClient, chalk, fs, path, global);
         }
         if (config.settings.sniper.token) {
-            require("./utils/token.js")(xClient, chalk, fs, global);
+            require("./utils/token.js")(xClient, chalk, fs, path, global);
         }
+        if (config.settings.sniper.messagelog) {
+            require("./utils/messagelog.js")(xClient, chalk, fs, path, global);
+        }
+
+        xClient.once("ready", () => {
+            if (config.settings.sniper.giveaway) {
+                require("./utils/giveaway.js")(
+                    xClient,
+                    chalk,
+                    fs,
+                    path,
+                    global
+                );
+            }
+        });
 
         await xClient.login(xToken);
         await delay(1000);
@@ -132,3 +148,28 @@ let global = {
         )
     );
 })();
+
+process.on("unhandledRejection", (reason, p) => {
+    console.log(
+        chalk.blue(chalk.bold(`[antiCrash]`)),
+        chalk.white(`>>`),
+        chalk.magenta(`Unhandled Rejection/Catch`),
+        chalk.red(reason, p)
+    );
+});
+process.on("uncaughtException", (err, origin) => {
+    console.log(
+        chalk.blue(chalk.bold(`[antiCrash]`)),
+        chalk.white(`>>`),
+        chalk.magenta(`Unhandled Exception/Catch`),
+        chalk.red(err, origin)
+    );
+});
+process.on("uncaughtExceptionMonitor", (err, origin) => {
+    console.log(
+        chalk.blue(chalk.bold(`[antiCrash]`)),
+        chalk.white(`>>`),
+        chalk.magenta(`Uncaught Exception/Catch`),
+        chalk.red(err, origin)
+    );
+});

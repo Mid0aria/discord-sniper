@@ -36,11 +36,15 @@ dWdnY2Y6Ly9iY3JhLmZjYmd2c2wucGJ6L2dlbnB4LzVwc2tIZ1B4Y3hQVkVlWGxxVVhGb1kgcm90MTM=
 ## ❗・Important (Anyone using the bot is deemed to have read and accepted these)
 
 -   Use of this sniper bot may lead to actions being taken against your Discord account. We are not responsible for them.
+-   You can keep 872 tokens active for 2 days with 6 GB ram (tested by me)
 
 ## 👑・Features
 
 -   Support Multi Alt Token
 -   Auto Claim All Discord Gift Codes (Nitro, Game, Decoration)
+-   Auto Join Giveaways
+-   Auto Check Giveaways Channels on Startup
+-   Logs all messages on all your DMs and Servers, or all messages on the server or channels of your choice
 -   Auto Snipe Tokens
 -   Auto Delete Duplicated Tokens
 -   Minimized Ram Cache System
@@ -52,12 +56,26 @@ dWdnY2Y6Ly9iY3JhLmZjYmd2c2wucGJ6L2dlbnB4LzVwc2tIZ1B4Y3hQVkVlWGxxVVhGb1kgcm90MTM=
     "maintoken": "", / Enter the token of the account to which the codes will be redeem here
     "settings": {
         "deleteduplicatetokens": true, / set this to true if you want to delete duplicate tokens
-        "sniper": {
-            "code": true, / set to true if you want to snipe nitro, game, decoration codes and redeem them to your account
-            "token": false / set this to true if you want to snipe tokens
+        "sniper": { / whichever sniper setting you want to enable, set it to the true
+            "code": false,
+            "token": false,
+            "giveaway": false,
+            "messagelog": false
         }
     }
+    "logs": { / set the setting you want to log to true
+        "code": false,
+        "token": false
+    },
+    "messagelog": { / if you want all servers and dm's to be logged leave [] empty
+        "guilds": ["guildid1","guildid2"...], / type the ids of the servers you want to log
+        "channels": ["channelid1","channelid2"...] / type the ids of the channels and dm's you want to log
+    },
+    "webhooks": { / enter your discord webhook link in the setting you want to receive webhook notification
+        "giveaway": ""
+    }
 }
+
 ```
 
 ## 💎・Get Token
