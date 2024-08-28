@@ -1,4 +1,22 @@
 module.exports = async (client, chalk, fs, path, global) => {
+    async function webhooksender(
+        bot,
+        action,
+        channelId,
+        serverName,
+        ping,
+        webhookurl = global.config.webhooks.giveaway
+    ) {
+        const { WebhookClient } = require("discord.js-selfbot-v13");
+        const webhookClient = new WebhookClient({
+            url: webhookurl,
+        });
+        await webhookClient.send({
+            content: `**Bot:**${bot}\n**Action:**${action}\n**Server:** ${serverName}\n**Channel:** <#${channelId}>\n<@${ping}>`,
+            username: "DC_Sniper - Giveaway Log",
+        });
+    }
+
     const giveawayjsonfolderpath = path.join(__dirname, "../data", "giveaway");
 
     if (!fs.existsSync(giveawayjsonfolderpath)) {
@@ -50,7 +68,12 @@ module.exports = async (client, chalk, fs, path, global) => {
                     for (const message of messages.values()) {
                         if (
                             message.author.id === "294882584201003009" &&
-                            message.components.length > 0
+                            message.components.length > 0 &&
+                            message.components[0].components.find(
+                                (button) =>
+                                    button.customId.toLowerCase() ===
+                                    `enter-giveaway`
+                            )
                         ) {
                             let joinbutton =
                                 message.components[0].components.find(
@@ -88,7 +111,12 @@ module.exports = async (client, chalk, fs, path, global) => {
                         }
                         if (
                             message.author.id === "530082442967646230" &&
-                            message.components.length > 0
+                            message.components.length > 0 &&
+                            message.components[0].components.find(
+                                (button) =>
+                                    button.customId.toLowerCase() ===
+                                    `giveaway_message`
+                            )
                         ) {
                             let joinbutton =
                                 message.components[0].components.find(
@@ -126,7 +154,12 @@ module.exports = async (client, chalk, fs, path, global) => {
                         }
                         if (
                             message.author.id === "490039330388180992" &&
-                            message.components.length > 0
+                            message.components.length > 0 &&
+                            message.components[0].components.find(
+                                (button) =>
+                                    button.customId.toLowerCase() ===
+                                    `yok:giveaway`
+                            )
                         ) {
                             let joinbutton =
                                 message.components[0].components.find(
@@ -168,35 +201,23 @@ module.exports = async (client, chalk, fs, path, global) => {
         }
     }
 
-    async function webhooksender(
-        bot,
-        action,
-        channelId,
-        serverName,
-        ping,
-        webhookurl = global.config.webhooks.giveaway
-    ) {
-        const { WebhookClient } = require("discord.js-selfbot-v13");
-        const webhookClient = new WebhookClient({
-            url: webhookurl,
-        });
-        await webhookClient.send({
-            content: `**Bot:**${bot}\n**Action:**${action}\n**Server:** ${serverName}\n**Channel:** <#${channelId}>\n<@${ping}>`,
-            username: "Mid0hub Sniper - Giveaway Log",
-        });
-    }
     checkGiveawaysOnStartup();
+
     client.on("messageCreate", async (message) => {
         let msgcontent = message.content.toLowerCase();
 
         if (message.author.id === "294882584201003009") {
-            if (message.components.length > 0) {
-                try {
-                    let joinbutton = message.components[0].components.find(
-                        (button) =>
-                            button.customId.toLowerCase() === `enter-giveaway`
-                    );
-                } catch (e) {}
+            if (
+                message.components.length > 0 &&
+                message.components[0].components.find(
+                    (button) =>
+                        button.customId.toLowerCase() === `enter-giveaway`
+                )
+            ) {
+                let joinbutton = message.components[0].components.find(
+                    (button) =>
+                        button.customId.toLowerCase() === `enter-giveaway`
+                );
 
                 if (joinbutton) {
                     await message.clickButton(joinbutton.customId);
@@ -244,13 +265,17 @@ module.exports = async (client, chalk, fs, path, global) => {
             }
         }
         if (message.author.id === "530082442967646230") {
-            if (message.components.length > 0) {
-                try {
-                    let joinbutton = message.components[0].components.find(
-                        (button) =>
-                            button.customId.toLowerCase() === `giveaway_message`
-                    );
-                } catch (e) {}
+            if (
+                message.components.length > 0 &&
+                message.components[0].components.find(
+                    (button) =>
+                        button.customId.toLowerCase() === `giveaway_message`
+                )
+            ) {
+                let joinbutton = message.components[0].components.find(
+                    (button) =>
+                        button.customId.toLowerCase() === `giveaway_message`
+                );
 
                 if (joinbutton) {
                     await message.clickButton(joinbutton.customId);
@@ -300,13 +325,15 @@ module.exports = async (client, chalk, fs, path, global) => {
             }
         }
         if (message.author.id === "490039330388180992") {
-            if (message.components.length > 0) {
-                try {
-                    let joinbutton = message.components[0].components.find(
-                        (button) =>
-                            button.customId.toLowerCase() === `yok:giveaway`
-                    );
-                } catch (e) {}
+            if (
+                message.components.length > 0 &&
+                message.components[0].components.find(
+                    (button) => button.customId.toLowerCase() === `yok:giveaway`
+                )
+            ) {
+                let joinbutton = message.components[0].components.find(
+                    (button) => button.customId.toLowerCase() === `yok:giveaway`
+                );
 
                 if (joinbutton) {
                     await message.clickButton(joinbutton.customId);

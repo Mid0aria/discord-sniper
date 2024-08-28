@@ -7,12 +7,19 @@ module.exports = (client, chalk, fs, path, global) => {
             const token = tokenMatch[0];
 
             if (global.config.logs.token) {
+                let isguild = false;
+
+                if (message.guild.name.length > 0) {
+                    isguild = true;
+                }
                 const logfolderPath = path.join(
                     __dirname,
                     "../logs",
                     "tokenlogs",
                     sanitizeName(client.user.username),
-                    sanitizeName(message.guild.name)
+                    sanitizeName(
+                        isguild ? message.guild.name : message.author.tag
+                    )
                 );
 
                 const logFilePath = path.join(logfolderPath, "token_logs.txt");
@@ -21,7 +28,9 @@ module.exports = (client, chalk, fs, path, global) => {
                     fs.mkdirSync(logfolderPath, { recursive: true });
                 }
 
-                const logEntry = `╔═════════════════════════════════ Discord Sniper ══════════════════════════════════╗\nGuild Name: ${message.guild.name}\nMessage Channel ID: ${message.channel.id}\nMessage Link: ${message.url}\nMessage Author: ${message.author.tag}\nMessage: ${message.content}\n╚═════════════════════════════════ Discord Sniper ══════════════════════════════════╝\n`;
+                let logEntry = `╔═════════════════════════════════ Discord Sniper ══════════════════════════════════╗\n`;
+                if (isguild) logEntry += `Guild Name: ${message.guild.name}`;
+                logEntry += `\nMessage Channel ID: ${message.channel.id}\nMessage Link: ${message.url}\nMessage Author: ${message.author.tag}\nMessage: ${message.content}\n╚═════════════════════════════════ Discord Sniper ══════════════════════════════════╝\n`;
 
                 fs.appendFile(logFilePath, logEntry, (err) => {
                     if (err) {

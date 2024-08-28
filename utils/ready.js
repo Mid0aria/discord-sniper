@@ -35,6 +35,6 @@ module.exports = (client, chalk, global) => {
         //     chalk.green(`channel is listening!!!`)
         // );
 
-        process.title = `Tokens: ${global.loggedInTokens} Guilds: ${global.totalGuilds} Channels: ${global.totalChannels}`;
+        process.title = `🕵️T: ${global.loggedInTokens} ✨G: ${global.totalGuilds} 🎗️C: ${global.totalChannels}`;
     });
 };

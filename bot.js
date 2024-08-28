@@ -24,7 +24,7 @@ if (config.settings.deleteduplicatetokens) {
     cp.execSync("node deletedup.js");
 }
 
-const tokens = fs
+let tokens = fs
     .readFileSync("alttokens.txt", "utf8")
     .split("\n")
     .filter(Boolean);
@@ -104,7 +104,23 @@ let global = {
             }
         });
 
-        await xClient.login(xToken);
+        try {
+            await xClient.login(xToken);
+        } catch (error) {
+            if (error.message.includes("TOKEN_INVALID")) {
+                console.log(
+                    chalk.red(`Invalid token detected and removed: ${xToken}`)
+                );
+                tokens.splice(i, 1);
+                fs.writeFileSync("alttokens.txt", tokens.join("\n"));
+                i--;
+            } else {
+                console.error(
+                    chalk.red(`Error logging in with token: ${error.message}`)
+                );
+            }
+        }
+
         await delay(1000);
     }
     process.stdout.write("\x1Bc");
