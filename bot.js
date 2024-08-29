@@ -4,7 +4,8 @@ const packageJson = require("./package.json");
 for (let dep of Object.keys(packageJson.dependencies)) {
     try {
         require.resolve(dep);
-    } catch (err) {
+        // eslint-disable-next-line no-unused-vars
+    } catch (e) {
         console.log(`Installing dependencies...`);
         cp.execSync(`npm i`);
     }
@@ -13,7 +14,6 @@ for (let dep of Object.keys(packageJson.dependencies)) {
 process.stdout.write("\x1Bc");
 
 const { Client, Options } = require("discord.js-selfbot-v13");
-const axios = require("axios");
 const fs = require("fs");
 const path = require("path");
 const chalk = require("chalk");
@@ -43,7 +43,7 @@ const codeRegex =
     /(discord\.gift\/|discord\.com\/gifts\/|discordapp\.com\/gifts\/)[^\s]+/gim;
 
 const tokenRegex =
-    /([a-zA-Z0-9_\-]{24,28})\.([a-zA-Z0-9_\-]{6})\.([a-zA-Z0-9_\-]{27,})/g;
+    /([a-zA-Z0-9_\\-]{24,28})\.([a-zA-Z0-9_\\-]{6})\.([a-zA-Z0-9_\\-]{27,})/g;
 
 let global = {
     loggedInTokens: 0,
@@ -123,6 +123,7 @@ let global = {
 
         await delay(1000);
     }
+
     process.stdout.write("\x1Bc");
     console.log(chalk.green.bold("Settings:"));
 
@@ -134,25 +135,43 @@ let global = {
         }
         return "unknown";
     }
+    const sections = [{ name: "settings", color: chalk.green.bold }];
 
-    for (const [key, value] of Object.entries(config.settings)) {
-        if (typeof value === "object") {
-            console.log(chalk.green.bold(`${key.toUpperCase()} Settings:`));
-            for (const [subKey, subValue] of Object.entries(value)) {
-                console.log(
-                    chalk.cyan(
-                        `${subKey.charAt(0).toUpperCase() + subKey.slice(1)}:`
-                    ),
-                    chalk.yellow(boolToStatus(subValue))
-                );
+    sections.forEach((section) => {
+        const configSection = config[section.name];
+        if (configSection) {
+            for (const [key, value] of Object.entries(configSection)) {
+                if (typeof value === "object") {
+                    console.log(
+                        section.color(`${key.toUpperCase()} Settings:`)
+                    );
+                    for (const [subKey, subValue] of Object.entries(value)) {
+                        console.log(
+                            chalk.cyan(
+                                `${
+                                    subKey.charAt(0).toUpperCase() +
+                                    subKey.slice(1)
+                                }:`
+                            ),
+                            chalk.yellow(boolToStatus(subValue))
+                        );
+                    }
+                } else {
+                    console.log(
+                        chalk.cyan(
+                            `${key.charAt(0).toUpperCase() + key.slice(1)}:`
+                        ),
+                        chalk.yellow(boolToStatus(value))
+                    );
+                }
             }
         } else {
-            console.log(
-                chalk.cyan(`${key.charAt(0).toUpperCase() + key.slice(1)}:`),
-                chalk.yellow(boolToStatus(value))
+            console.warn(
+                chalk.red(`Warning: ${section.name} is not defined in config.`)
             );
         }
-    }
+    });
+
     console.log(
         chalk.green.bold(
             `A total of ${global.loggedInTokens} tokens have successfully logged in.`

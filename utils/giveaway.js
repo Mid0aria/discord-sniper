@@ -69,129 +69,191 @@ module.exports = async (client, chalk, fs, path, global) => {
                         if (
                             message.author.id === "294882584201003009" &&
                             message.components.length > 0 &&
-                            message.components[0].components.find(
+                            message.components[0].components.some(
                                 (button) =>
                                     button.customId.toLowerCase() ===
-                                    `enter-giveaway`
+                                    "enter-giveaway"
                             )
                         ) {
-                            let joinbutton =
+                            let joinButton =
                                 message.components[0].components.find(
                                     (button) =>
                                         button.customId.toLowerCase() ===
-                                        `enter-giveaway`
+                                        "enter-giveaway"
                                 );
-                            if (joinbutton) {
-                                await message.clickButton(joinbutton.customId);
-                                if (
-                                    global.config.webhooks.giveaway.length > 90
-                                ) {
-                                    webhooksender(
-                                        "GiveawayBot#2381",
-                                        "Joined",
-                                        message.channel.id,
-                                        message.guild.name,
-                                        client.user.id
+
+                            if (
+                                joinButton &&
+                                !joinButton.disabled &&
+                                joinButton.customId
+                            ) {
+                                try {
+                                    await message.clickButton(
+                                        joinButton.customId
+                                    );
+                                    if (
+                                        global.config.webhooks.giveaway.length >
+                                        90
+                                    ) {
+                                        webhooksender(
+                                            "GiveawayBot#2381",
+                                            "Joined",
+                                            message.channel.id,
+                                            message.guild.name,
+                                            client.user.id
+                                        );
+                                    }
+                                    console.log(
+                                        `[${chalk.magenta(
+                                            client.user.username
+                                        )}] - ${chalk.green(
+                                            "Joined Giveaway"
+                                        )} - ${chalk.blue(
+                                            "GiveawayBot#2381"
+                                        )} - ${chalk.cyan(
+                                            `Server: ${message.guild.name}`
+                                        )} - ${chalk.yellow(
+                                            `Channel ID: ${message.channel.id}`
+                                        )}`
+                                    );
+                                } catch (error) {
+                                    console.error(
+                                        `Failed to click button: ${
+                                            error.message
+                                        } - ${chalk.red("BUTTON_CANNOT_CLICK")}`
                                     );
                                 }
+                            } else {
                                 console.log(
-                                    `[${chalk.magenta(
-                                        client.user.username
-                                    )}] - ${chalk.green(
-                                        "Joined Giveaway"
-                                    )} - ${chalk.blue(
-                                        "GiveawayBot#2381"
-                                    )} - ${chalk.cyan(
-                                        `Server: ${message.guild.name}`
-                                    )} - ${chalk.yellow(
-                                        `Channel ID: ${message.channel.id}`
-                                    )}`
+                                    "Button is either disabled or missing a custom_id."
                                 );
                             }
                         }
+
                         if (
                             message.author.id === "530082442967646230" &&
                             message.components.length > 0 &&
-                            message.components[0].components.find(
+                            message.components[0].components.some(
                                 (button) =>
                                     button.customId.toLowerCase() ===
-                                    `giveaway_message`
+                                    "giveaway_message"
                             )
                         ) {
-                            let joinbutton =
+                            let joinButton =
                                 message.components[0].components.find(
                                     (button) =>
                                         button.customId.toLowerCase() ===
-                                        `giveaway_message`
+                                        "giveaway_message"
                                 );
-                            if (joinbutton) {
-                                await message.clickButton(joinbutton.customId);
-                                if (
-                                    global.config.webhooks.giveaway.length > 90
-                                ) {
-                                    webhooksender(
-                                        "Giveaway Boat#2911",
-                                        "Joined",
-                                        message.channel.id,
-                                        message.guild.name,
-                                        client.user.id
+
+                            if (
+                                joinButton &&
+                                !joinButton.disabled &&
+                                joinButton.customId
+                            ) {
+                                try {
+                                    await message.clickButton(
+                                        joinButton.customId
+                                    );
+                                    if (
+                                        global.config.webhooks.giveaway.length >
+                                        90
+                                    ) {
+                                        webhooksender(
+                                            "Giveaway Boat#2911",
+                                            "Joined",
+                                            message.channel.id,
+                                            message.guild.name,
+                                            client.user.id
+                                        );
+                                    }
+                                    console.log(
+                                        `[${chalk.magenta(
+                                            client.user.username
+                                        )}] - ${chalk.green(
+                                            "Joined Giveaway"
+                                        )} - ${chalk.blue(
+                                            "Giveaway Boat#2911"
+                                        )} - ${chalk.cyan(
+                                            `Server: ${message.guild.name}`
+                                        )} - ${chalk.yellow(
+                                            `Channel ID: ${message.channel.id}`
+                                        )}`
+                                    );
+                                } catch (error) {
+                                    console.error(
+                                        `Failed to click button: ${
+                                            error.message
+                                        } - ${chalk.red("BUTTON_CANNOT_CLICK")}`
                                     );
                                 }
+                            } else {
                                 console.log(
-                                    `[${chalk.magenta(
-                                        client.user.username
-                                    )}] - ${chalk.green(
-                                        "Joined Giveaway"
-                                    )} - ${chalk.blue(
-                                        "Giveaway Boat#2911"
-                                    )} - ${chalk.cyan(
-                                        `Server: ${message.guild.name}`
-                                    )} - ${chalk.yellow(
-                                        `Channel ID: ${message.channel.id}`
-                                    )}`
+                                    "Button is either disabled or missing a custom_id."
                                 );
                             }
                         }
+
                         if (
                             message.author.id === "490039330388180992" &&
                             message.components.length > 0 &&
-                            message.components[0].components.find(
+                            message.components[0].components.some(
                                 (button) =>
                                     button.customId.toLowerCase() ===
-                                    `yok:giveaway`
+                                    "yok:giveaway"
                             )
                         ) {
-                            let joinbutton =
+                            let joinButton =
                                 message.components[0].components.find(
                                     (button) =>
                                         button.customId.toLowerCase() ===
-                                        `yok:giveaway`
+                                        "yok:giveaway"
                                 );
-                            if (joinbutton) {
-                                await message.clickButton(joinbutton.customId);
-                                if (
-                                    global.config.webhooks.giveaway.length > 90
-                                ) {
-                                    webhooksender(
-                                        "Marpel#2574",
-                                        "Joined",
-                                        message.channel.id,
-                                        message.guild.name,
-                                        client.user.id
+
+                            if (
+                                joinButton &&
+                                !joinButton.disabled &&
+                                joinButton.customId
+                            ) {
+                                try {
+                                    await message.clickButton(
+                                        joinButton.customId
+                                    );
+                                    if (
+                                        global.config.webhooks.giveaway.length >
+                                        90
+                                    ) {
+                                        webhooksender(
+                                            "Marpel#2574",
+                                            "Joined",
+                                            message.channel.id,
+                                            message.guild.name,
+                                            client.user.id
+                                        );
+                                    }
+                                    console.log(
+                                        `[${chalk.magenta(
+                                            client.user.username
+                                        )}] - ${chalk.green(
+                                            "Joined Giveaway"
+                                        )} - ${chalk.blue(
+                                            "Marpel#2574"
+                                        )} - ${chalk.cyan(
+                                            `Server: ${message.guild.name}`
+                                        )} - ${chalk.yellow(
+                                            `Channel ID: ${message.channel.id}`
+                                        )}`
+                                    );
+                                } catch (error) {
+                                    console.error(
+                                        `Failed to click button: ${
+                                            error.message
+                                        } - ${chalk.red("BUTTON_CANNOT_CLICK")}`
                                     );
                                 }
+                            } else {
                                 console.log(
-                                    `[${chalk.magenta(
-                                        client.user.username
-                                    )}] - ${chalk.green(
-                                        "Joined Giveaway"
-                                    )} - ${chalk.blue(
-                                        "Marpel#2574"
-                                    )} - ${chalk.cyan(
-                                        `Server: ${message.guild.name}`
-                                    )} - ${chalk.yellow(
-                                        `Channel ID: ${message.channel.id}`
-                                    )}`
+                                    "Button is either disabled or missing a custom_id."
                                 );
                             }
                         }
@@ -218,7 +280,7 @@ module.exports = async (client, chalk, fs, path, global) => {
                     (button) =>
                         button.customId.toLowerCase() === `enter-giveaway`
                 );
-
+                if (!joinbutton.customId || joinbutton.disabled) return;
                 if (joinbutton) {
                     await message.clickButton(joinbutton.customId);
                     addChannelToJSON(client.user.id, message.channel.id);
@@ -276,7 +338,7 @@ module.exports = async (client, chalk, fs, path, global) => {
                     (button) =>
                         button.customId.toLowerCase() === `giveaway_message`
                 );
-
+                if (!joinbutton.customId || joinbutton.disabled) return;
                 if (joinbutton) {
                     await message.clickButton(joinbutton.customId);
                     addChannelToJSON(client.user.id, message.channel.id);
@@ -334,7 +396,7 @@ module.exports = async (client, chalk, fs, path, global) => {
                 let joinbutton = message.components[0].components.find(
                     (button) => button.customId.toLowerCase() === `yok:giveaway`
                 );
-
+                if (!joinbutton.customId || joinbutton.disabled) return;
                 if (joinbutton) {
                     await message.clickButton(joinbutton.customId);
                     addChannelToJSON(client.user.id, message.channel.id);

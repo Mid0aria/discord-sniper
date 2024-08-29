@@ -31,7 +31,7 @@ module.exports = (client, chalk, fs, path, global) => {
     client.on("messageCreate", async (message) => {
         const codeMatch = message.content.match(global.regexs.code);
         if (codeMatch) {
-            if (global.config.logs.code) {
+            if (global.config.settings.logs.code) {
                 let isguild = false;
 
                 if (message.guild.name.length > 0) {

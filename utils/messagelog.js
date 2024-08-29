@@ -1,5 +1,3 @@
-const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
 function sanitizeName(name) {
     return name.replace(/[^a-z0-9]/gi, "_").toLowerCase();
 }
