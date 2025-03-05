@@ -93,6 +93,7 @@ let global = {
         }
 
         xClient.once("ready", () => {
+            setupSweeper(xClient);
             if (config.settings.sniper.giveaway) {
                 require("./utils/giveaway.js")(
                     xClient,
@@ -208,3 +209,24 @@ process.on("uncaughtExceptionMonitor", (err, origin) => {
         chalk.red(err, origin)
     );
 });
+
+function setupSweeper(botClient) {
+    setInterval(() => {
+        botClient.channels.cache.forEach((channel) => {
+            if (channel.messages) {
+                const messagesArray = Array.from(
+                    channel.messages.cache.values()
+                );
+                messagesArray.sort(
+                    (a, b) => a.createdTimestamp - b.createdTimestamp
+                );
+                const messagesToDelete = Math.floor(
+                    messagesArray.length * 0.85
+                );
+                for (let i = 0; i < messagesToDelete; i++) {
+                    channel.messages.cache.delete(messagesArray[i].id);
+                }
+            }
+        });
+    }, 5 * 60 * 1000);
+}
